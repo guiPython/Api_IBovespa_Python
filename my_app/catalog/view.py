@@ -13,20 +13,19 @@ class TickView(MethodView):
     def get(self,name=None,keyAlphaVantage=None):
         if name == None and keyAlphaVantage != None:
             ticks = Tick.query.all()
-            if not ticks:
-                abort(404)
             res = {}
-            for tick in ticks.items:
+            for tick in ticks:
                 res[tick.Name] = {
                     "Company"  : tick.Company,
                     "Sector"   : tick.Sector,
                     "Subsector": tick.Subsector,
-                    "Price"    : tick.Price,
-                    "Max"      : tick.Max,
-                    "Min"      : tick.Min,
-                    "Open"     : tick.Open,
-                    "Close"    : tick.Close
+                    "Price"    : str(tick.Price),
+                    "Max"      : str(tick.Max),
+                    "Min"      : str(tick.Min),
+                    "Open"     : str(tick.Open),
+                    "Close"    : str(tick.Close)
                 }
+
         elif keyAlphaVantage != None:
                 tick = Tick.query.filter_by(Name=name).first()
                 if tick is None:
@@ -40,24 +39,25 @@ class TickView(MethodView):
                     tick = Tick(Name=name,Company=Company,Sector=Sector,Subsector=Subsector,Price=Price,Max=Max,Min=Min,Close=Close,Open=Open)
                     db.session.add(tick)
                     db.session.commit()
+                res =  {
+                        "Company"  : str(tick.Company),
+                        "Sector"   : str(tick.Sector),
+                        "Subsector": str(tick.Subsector),
+                        "Price"    : str(tick.Price),
+                        "Max"      : str(tick.Max),
+                        "Min"      : str(tick.Min),
+                        "Open"     : str(tick.Open),
+                        "Close"    : str(tick.Close)
+                        }
         else: abort(404)
         #Resposta da Api 
-        return jsonify({
-                "Company"  : str(tick.Company),
-                "Sector"   : str(tick.Sector),
-                "Subsector": str(tick.Subsector),
-                "Price"    : str(tick.Price),
-                "Max"      : str(tick.Max),
-                "Min"      : str(tick.Min),
-                "Open"     : str(tick.Open),
-                "Close"    : str(tick.Close)
-                })
+        return jsonify(res)
         
 
 tick_view = TickView.as_view('tick_view')
 
 app.add_url_rule(
-    '/tick/', view_func = tick_view, methods = ['GET']
+    '/tick/<string:keyAlphaVantage>', view_func = tick_view, methods = ['GET']
 )
 
 app.add_url_rule(
