@@ -11,9 +11,9 @@ catalog = Blueprint('catalog',__name__)
 class TickView(MethodView):
 
     def get(self,name=None,keyAlphaVantage=None):
+        res = {}
         if name == None and keyAlphaVantage != None:
             ticks = Tick.query.all()
-            res = {}
             for tick in ticks:
                 res[tick.Name] = {
                     "Company"  : tick.Company,
@@ -39,10 +39,10 @@ class TickView(MethodView):
                     tick = Tick(Name=name,Company=Company,Sector=Sector,Subsector=Subsector,Price=Price,Max=Max,Min=Min,Close=Close,Open=Open)
                     db.session.add(tick)
                     db.session.commit()
-                res =  {
-                        "Company"  : str(tick.Company),
-                        "Sector"   : str(tick.Sector),
-                        "Subsector": str(tick.Subsector),
+                res[tick.Name] =  {
+                        "Company"  : tick.Company,
+                        "Sector"   : tick.Sector,
+                        "Subsector": tick.Subsector,
                         "Price"    : str(tick.Price),
                         "Max"      : str(tick.Max),
                         "Min"      : str(tick.Min),
