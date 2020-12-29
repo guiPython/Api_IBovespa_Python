@@ -14,7 +14,7 @@ class Tick (db.Model):
     Close = db.Column(db.Float(asdecimal=True))
 
     def __init__(self,Name,Company,Sector,Subsector,Price,Max,Min,Open,Close):
-        self.name = name
+        self.Name = Name
         self.Company = Company
         self.Sector = Sector
         self.Subsector = Subsector

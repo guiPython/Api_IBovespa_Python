@@ -1,10 +1,11 @@
 import requests
 import bs4
 
-class Tick():
+class TickWeb():
 
-    def __init__(self,Name):
+    def __init__(self,Name,KeyAlphaVantage):
         self.Name = Name
+        self.KeyAlphaVantage = KeyAlphaVantage
 
     def getPrice(self):
         data = requests.get(f'https://query1.finance.yahoo.com/v8/finance/chart/{self.Name}.SA?region=US&lang=en-US&includePrePost=false&interval=2m&range=1d&corsDomain=finance.yahoo.com&.tsrc=finance')
@@ -20,9 +21,9 @@ class Tick():
         return [Company,Sector,Subsector]
 
     def getDinamicInfo(self):
-        return ...
+        data = requests.get(f"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={self.Name}.SAO&apikey={self.KeyAlphaVantage}")
+        res = data.json()['Global Quote']
+        return [float(x) for x in [res['02. open'] , res['08. previous close'], res['03. high'] , res['04. low']]]
 
 
-acao = Tick('itub4')
-print(acao.getStaticInfo())
-print(acao.getPrice())
+
