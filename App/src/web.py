@@ -10,7 +10,7 @@ class TickWeb():
     def getPrice(self):
         data = requests.get(f'https://query1.finance.yahoo.com/v8/finance/chart/{self.Name}.SA?region=US&lang=en-US&includePrePost=false&interval=2m&range=1d&corsDomain=finance.yahoo.com&.tsrc=finance')
         price = data.json()['chart'] ['result'] [0] ['meta'] ['regularMarketPrice']
-        return price
+        return float(price)
     
     def getStaticInfo(self):
         data = requests.get(f"https://statusinvest.com.br/acoes/{self.Name}")
@@ -25,5 +25,6 @@ class TickWeb():
         res = data.json()['Global Quote']
         return [float(x) for x in [res['02. open'] , res['08. previous close'], res['03. high'] , res['04. low']]]
 
-
-
+    def getJSON(self):
+        data = requests.get(f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={self.Name}.SAO&outputsize=full&apikey={self.KeyAlphaVantage}")
+        return data.json()
