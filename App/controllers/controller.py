@@ -9,6 +9,13 @@ class TickController():
         self.Name = Name
         self.KeyAlphaVantage = KeyAlphaVantage
 
+    def getDate(self,date):
+        info = ['%d','%m','%Y','%H','%M']
+        dateRes = []
+        for x in range(len(info)):
+            dateRes.append(int(datetime.strftime(date,info[x])))
+        return datetime(dateRes[2],dateRes[1],dateRes[0],dateRes[3],dateRes[4])   
+
     def getTick(self):
         try:
             return Tick.query.filter_by(Name=self.Name).first()
@@ -46,7 +53,7 @@ class TickController():
 
     def updateJson(self,date):
         dateNow = datetime.now()
-        dateAtt = datetime.strftime(date,"%d/%m/%Y %H:%M:%S") + timedelta(hours=24)
+        dateAtt = self.getDate(date) + timedelta(hours=24)
         if ( dateAtt < dateNow):
             try:
                 tickweb = Tick(self.Name,self.KeyAlphaVantage)
@@ -58,7 +65,7 @@ class TickController():
     
     def updatePrice(self,date):
         dateNow = datetime.now()
-        dateAtt = (datetime.strftime(date,"%d/%m/%Y %H:%M:%S") + timedelta(minutes=10))
+        dateAtt = (self.getDate(date) + timedelta(minutes=10))
         if ( dateAtt <= dateNow ):
             try:
                 tickweb = TickWeb(self.Name,self.KeyAlphaVantage)

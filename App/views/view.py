@@ -43,7 +43,8 @@ class TickView(MethodView):
                 controller.insertTick()
                 tick = controller.getTick()
             else:
-                controller.updateTick()
+                print(controller.updateTick())
+                tick = controller.getTick()
             res[tick.Name] = {
                     "Company"  : tick.Company,
                     "Sector"   : tick.Sector,

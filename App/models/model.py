@@ -1,6 +1,6 @@
 from App.index import db ,app
 from datetime import datetime
-from sqlalchemy.sql import func
+
 
 
 class Tick (db.Model):
@@ -16,8 +16,8 @@ class Tick (db.Model):
     Open = db.Column(db.Float(asdecimal=True))
     Close = db.Column(db.Float(asdecimal=True))
     Json = db.Column(db.JSON())
-    Date_Json = db.Column(db.DateTime(timezone=True),default=func.now())
-    Date_Updated = db.Column(db.DateTime(timezone=True),default=func.now(),onupdate=func.now())
+    Date_Json = db.Column(db.DateTime(timezone=True),default=datetime.now())
+    Date_Updated = db.Column(db.DateTime(timezone=True),default=datetime.now(),onupdate=datetime.now())
 
     def __init__(self,Name,Company,Sector,Subsector,Price,Max,Min,Open,Close,Json,Date_Json):
         self.Name = Name
