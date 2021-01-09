@@ -2,6 +2,7 @@ from App.src.web import TickWeb
 from App.index import db
 from datetime import datetime , timedelta
 from App.models.model import Tick
+from dateutil import parser
 
 
 class TickController():
@@ -78,11 +79,10 @@ class TickController():
     def updateInfo(self,date):
         dateNow = datetime.now()
         dateAtt = f'{dateNow.strftime("%d")}/{dateNow.strftime("%m")}/{dateNow.strftime("%Y")} 18:00:00'
-        if ( dateNow >= datetime.strptime(dateAtt,"%d/%m/%Y %H:%M:%S") and datetime.strptime(date,"%d/%m/%Y %H:%M:%S") <= dateAtt):
+        if ( dateNow >= datetime.strptime(dateAtt,"%d/%m/%Y %H:%M:%S") and datetime.strptime(f'{f"{date}".split(".")[0]}'.replace("-","/"),"%Y/%m/%d %H:%M:%S").strftime("%d/%m/%Y %H:%M:%S") <= dateAtt):
             try:
                 tickWeb = TickWeb(self.name,self.KeyAlphaVantage)
                 [Open,Close,Max,Min] = tickWeb.getDinamicInfo()
-                print([Open,Close,Max,Min])
                 tick = Tick.query.filter_by(Name=self.Name).update(dict(Open=Open,Close=Close,Max=Max,Min=Min))
                 db.session.commit()
             except Exception as e:

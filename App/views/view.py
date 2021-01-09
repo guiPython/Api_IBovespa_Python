@@ -13,7 +13,7 @@ tick = Blueprint('tick',__name__)
 class TickView(MethodView):
 
     def get(self,name=None,keyAlphaVantage=None):
-        res = {}
+        res = []
 
         if name == None and keyAlphaVantage != None:
             controller = TickController("",keyAlphaVantage)
@@ -21,20 +21,22 @@ class TickView(MethodView):
             for tick in ticks:
                 controller = TickController(tick.Name,keyAlphaVantage)
                 controller.updateTick()
-                sleep(2)
             ticks = controller.getTicks()
             for tick in ticks:
-                res[tick.Name] = {
-                    "Company"  : tick.Company,
-                    "Sector"   : tick.Sector,
-                    "Subsector": tick.Subsector,
-                    "Price"    : f'{tick.Price:.2f}',
-                    "Max"      : f'{tick.Max:.2f}',
-                    "Min"      : f'{tick.Min:.2f}',
-                    "Open"     : f'{tick.Open:.2f}',
-                    "Close"    : f'{tick.Close:.2f}',
-                    "Date_Updated" : tick.Date_Updated
-                }
+                res.append({
+                    "Nome" : tick.Name,
+                    "Values" : {
+                        "Company"  : tick.Company,
+                        "Sector"   : tick.Sector,
+                        "Subsector": tick.Subsector,
+                        "Price"    : f'{tick.Price:.2f}'.replace(".",","),
+                        "Max"      : f'{tick.Max:.2f}'.replace(".",","),
+                        "Min"      : f'{tick.Min:.2f}'.replace(".",","),
+                        "Open"     : f'{tick.Open:.2f}'.replace(".",","),
+                        "Close"    : f'{tick.Close:.2f}'.replace(".",","),
+                        "Date_Updated" : tick.Date_Updated
+                        }
+                })
 
         elif keyAlphaVantage != None:
             controller = TickController(name,keyAlphaVantage)
@@ -43,19 +45,22 @@ class TickView(MethodView):
                 controller.insertTick()
                 tick = controller.getTick()
             else:
-                print(controller.updateTick())
+                controller.updateTick()
                 tick = controller.getTick()
-            res[tick.Name] = {
+            res.append({
+                "Nome" : tick.Name,
+                "Values" : {
                     "Company"  : tick.Company,
                     "Sector"   : tick.Sector,
                     "Subsector": tick.Subsector,
-                    "Price"    : f'{tick.Price:.2f}',
-                    "Max"      : f'{tick.Max:.2f}',
-                    "Min"      : f'{tick.Min:.2f}',
-                    "Open"     : f'{tick.Open:.2f}',
-                    "Close"    : f'{tick.Close:.2f}',
+                    "Price"    : f'{tick.Price:.2f}'.replace(".",","),
+                    "Max"      : f'{tick.Max:.2f}'.replace(".",","),
+                    "Min"      : f'{tick.Min:.2f}'.replace(".",","),
+                    "Open"     : f'{tick.Open:.2f}'.replace(".",","),
+                    "Close"    : f'{tick.Close:.2f}'.replace(".",","),
                     "Date_Updated" : tick.Date_Updated
-                }
+                    }
+                })
 
         else: abort(404)
 
