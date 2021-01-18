@@ -8,7 +8,7 @@ class TickWeb():
         self.KeyAlphaVantage = KeyAlphaVantage
 
     def getPrice(self):
-        data = requests.get(f'https://query1.finance.yahoo.com/v8/finance/chart/{self.Name}.SA?region=US&lang=en-US&includePrePost=false&interval=2m&range=1d&corsDomain=finance.yahoo.com&.tsrc=finance')
+        data = requests.get(f'https://query1.finance.yahoo.com/v8/finance/chart/{self.Name}.SA')
         price = data.json()['chart'] ['result'] [0] ['meta'] ['regularMarketPrice']
         return float(price)
     
